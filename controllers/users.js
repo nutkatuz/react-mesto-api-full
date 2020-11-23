@@ -1,4 +1,6 @@
-// const path = require('path');
+const jwt = require('jsonwebtoken');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
@@ -75,10 +77,29 @@ const editUserAvatar = async (req, res) => {
   }
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+  return User.findUserByCredentials(email, password)
+    .then(() => {
+      const token = jwt.sign(
+        // { _id: user._id },
+        {
+          _id: 'd285e3dceed844f902650f40',
+        },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: `Ошибка на сервере: ${err}` });
+    });
+};
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   editUser,
   editUserAvatar,
+  login,
 };
