@@ -1,13 +1,10 @@
 const express = require('express');
-const mongoose = require('mongoose');
-require('dotenv').config();
-// const { requestLogger, errorLogger } = require('./middlewares/logger');
-
-// app.use(logger);
-
-const PORT = 3000;
+const path = require('path');
+const PORT = 4000;
 const app = express();
 const routes = require('./routes/index.js');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -27,5 +24,7 @@ app.use((req, res, next) => { // временно вместо авториза�
   next();// централизованный обработчик ошибок
 });
 
-app.use(routes);
+app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use('/', routes);
 app.listen(PORT, () => console.log(`App listening on port ${PORT}..`));

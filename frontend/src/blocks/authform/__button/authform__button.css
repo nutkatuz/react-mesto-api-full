@@ -1,0 +1,25 @@
+.authform__button {
+  width: 100%;
+  height: 50px;
+  background: #FFF;
+  border-radius: 2px;
+  margin: 216px auto 15px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  border: none;
+  transition: .2s linear;
+}
+
+.authform__button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 890px) {
+  .authform__button {
+    font-size: 16px;
+    line-height: 19px;
+  }
+}

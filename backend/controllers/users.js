@@ -16,7 +16,7 @@ const getCurrentUser = (req, res) => { // здесь юзер.айди
     });
 };
 
-const getUser = async (req, res) => { // здесь gfhfvc.айди
+const getUser = async (req, res) => { // здесь парамс.айди
   try {
     const user = await User.findOne({ _id: req.params._id });
     if (!user) {
@@ -82,7 +82,7 @@ const createUser = (req, res, next) => {
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ email, password: hash }))
     .then((_id) => res.status(201).send({ _id, email }))
-    .catch(err); //(next)?????????
+    .catch(`ура ${err}`); //(next)????????? anna@ya.ru 111
 };
 
 const login = (req, res) => {
@@ -109,7 +109,7 @@ module.exports = { // контроллер возвращает информац
   getUser,        // о пользователе
   getCurrentUser, // о текущем пользователе
   createUser,     // возвращает объект пользователя
-  editUser,       //
-  editUserAvatar, //
+  editUser,       // редактирование
+  editUserAvatar, // редактирование
   login,          // проверяет полученные в теле запроса почту и пароль.
 };

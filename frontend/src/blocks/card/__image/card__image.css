@@ -4,6 +4,8 @@
     object-fit: cover;
     object-position: center;
     grid-area: image;
+    background-color: rgb(175, 175, 175);
+    background-color: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRrzZqXNMl06cgAzRdsiMMMU3kMwa8EDttdrw&usqp=CAU');
     cursor: pointer;
     transition: transform .5s ease-in-out;
 }

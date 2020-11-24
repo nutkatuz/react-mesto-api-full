@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
-  // Стейт, в котором содержится значение инпута
+function AddPlacePopup({ isOpen, onClose, onAddCard }) {
+
   const [form, setForm] = useState({
     name: '',
     link: ''
   });
 
+  useEffect(() => {
+  if (isOpen === true) {
+    setForm({
+    name: '',
+    link: ''
+    });
+  }
+  }, [isOpen])
 
-  function handleChange(e) {  // Обработчик изменения инпута обновляет стейт
+  function handleChange(e) {
     const input = e.target;
-    // const name = input.name;
-    // const value = input.value;
-    setForm({    // ( {...values, { [name]: value }} )
+    setForm({  // Обработчик изменения инпута обновляет стейт
       ...form,
       [input.name]: input.value
     });
@@ -21,13 +27,14 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    onAddPlace(form);
+    onAddCard(form);
   }
 
   return (
     <PopupWithForm
       name='confirm'
       title='Новое место'
+      buttonText='Создать'
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
@@ -56,10 +63,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           required />
         <span className='popup__error' />
       </label>
-      <button className='popup__button'
-        type='submit'
-        aria-label='Сохранить новую карточку'>Создать
-      </button>
+
     </PopupWithForm>
   )
 }

@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Main({ 
-  onEditAvatar, 
-  onEditProfile, 
-  onAddPlace, 
-  onCardClick, 
+function Main({
+  onEditAvatar,
+  onEditProfile,
+  onAddCard,
+  onCardClick,
   cards,
   onCardLike,
   onCardDelete,
@@ -34,7 +34,7 @@ function Main({
           aria-label='Редактировать данные профиля'>
         </button>
         <button
-          onMouseUp={() => onAddPlace()}
+          onMouseUp={() => onAddCard()}
           className='profile__add-button hover-style'
           type='button'
           aria-label='Добавить карточку'>
