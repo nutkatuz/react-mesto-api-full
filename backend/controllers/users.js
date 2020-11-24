@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-spaces */
 const jwt = require('jsonwebtoken');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -25,6 +26,16 @@ const createUser = async (req, res) => {
 //     .then((user) => res.status(201).send({ _id: user._id, email }))
 //     .catch(next);
 // };
+const getCurrentUser = (req, res) => {
+  const { params } = req.params;
+  return User.findUserByCredentials(params)
+    .then(() => {
+      res.send({ params });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: `Ошибка getCurrentUser: ${err}` });
+    });
+};
 
 const getUsers = async (req, res) => {
   try {
@@ -91,15 +102,17 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: `Ошибка на сервере: ${err}` });
+      res.status(401).send({ message: `Неправильные почта и/или логин: ${err}` });
     });
 };
 
-module.exports = {
-  getUsers,
-  getUser,
-  createUser,
-  editUser,
-  editUserAvatar,
-  login,
+module.exports = { // контроллер возвращает информацию
+  // eslint-disable-next-line no-multi-spaces
+  getUsers,       // о всех пользователях
+  getUser,        // о пользователе
+  getCurrentUser, // о текущем пользователе
+  createUser,     // возвращает объект пользователя
+  editUser,       //
+  editUserAvatar, //
+  login,          // получает из запроса почту и пароль и проверяет их
 };
