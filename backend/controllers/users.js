@@ -68,20 +68,19 @@ const editUserAvatar = async (req, res) => {
 //В контроллере createUser почта и хеш пароля записываются в базу.
 const createUser = (req, res, next) => {
   const { email, password } = req.body;
-    if (!email || !password) { // anna@ya.ru 111
-    return res.status(400).send({ message: 'не заполнены поля формы' });
+  if (!email || !password) { // anna@ya.ru 111
+    return res.status(400).send({ message: 'не заполнены поля формы рег-ции' });
   }
   User
   .findOne({ email })
   .then((user) => {
     if (user) {
       res.status(409).send({ message: 'Пользователь с таким email уже зарегистрирован'})
-      next(new ConflictDataError(err)); // прервать контроллер!! // return Promise.reject
+      return next(new ConflictDataError(err)); // return Promise.reject
     }
     return bcrypt.hash(password, 10);
   })
- // далее - зона безопасной регистрации  .catch(next);
-  .then((hash) => User
+  .then((hash) => User // далее - зона безопасной регистрации  .catch(next);
     .create({ email, password: hash, })
     .then(user => res.status(201).send({ data: user }))
   )
@@ -90,13 +89,18 @@ const createUser = (req, res, next) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
-  return User.findUserByCredentials(email, password)
-    .then(() => {
+  if (!email || !password) {
+    return res.status(400).send({ message: 'не заполнены поля формы логина' });
+  }
+  User.findUserByCredentials(email, password) // сравним запрос с БД
+    .then((user) => {
+      if (!user) {
+        res.status(401).send({ message: 'не заполнены поля формы логина' });
+        return next(new ConflictDataError(err)); // return Promise.reject
+      }
+      // создадим токен и возвратим его обратно для доступа
       const token = jwt.sign(
-        // { _id: user._id },
-        {
-          _id: 'd285e3dceed844f902650f40',
-        },//создаёт JWT, в пейлоуд которого записано свойство _id с идентификатором пользователя.
+        { _id: user._id }, //создаёт JWT, в пейлоуде - _id с идентификатором юзера
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' },
       );
       res.send({ token });
@@ -107,7 +111,6 @@ const login = (req, res) => {
 };
 
 module.exports = { // контроллер возвращает информацию
-  // eslint-disable-next-line no-multi-spaces
   getUsers,       // о всех пользователях
   getUser,        // о пользователе
   getCurrentUser, // о текущем пользователе
