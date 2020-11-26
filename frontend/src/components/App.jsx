@@ -36,15 +36,18 @@ function App() {
 // ----------------------------------------------------------------------------------
 
   useEffect(() => {
-    Promise.all([api.getUserData(), api.getInitialItems()])
-      .then(([userInfo, cards]) => {
-        setCurrentUser(userInfo);
-        setCards(cards);
-      })
-      .catch((err) => {
-        console.log(`${err}`);
-      });
-  }, []);
+    Promise.all([
+      api.getUserData(),
+      api.getInitialItems()
+    ])
+    .then(([userInfo, cards]) => {
+      setCurrentUser(userInfo);
+      setCards(cards);
+    })
+    .catch((err) => {
+      console.log('Ошибка Promise.all при loggedIn: ' + err);
+    });
+  }, [loggedIn]);  // }, []);
 
   useEffect(() => {
     if (document.contains(document.querySelector('.popup_is-opened'))) {
@@ -135,7 +138,7 @@ function App() {
       .changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
         const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
-        setCards(newCards);
+        setCards(newCards);//С лайками - там нужно id лайка везде удалить и заработает
       })
       .catch((err) => {
         console.log(`${err}`);
@@ -189,7 +192,7 @@ function App() {
         if (err === 400) {
           console.log('Не передано одно из полей, либо пользователь уже существует');
         }
-        console.log('Ошибка регистрации 191: ' + err); // при регистрации же не может быть 401 ошибки ?
+        console.log('Ошибка регистрации: ' + err); // при регистрации же не может быть 401 ошибки ?
         setIsSuccess(false);
       })
       .finally(() =>{
@@ -212,13 +215,14 @@ function App() {
         .then((res) => {
           if (res) {
             setLoggedIn(true);
-            setEmail( res.data.email);
+            setEmail(res.email);//( res.data.email);
             history.push('/');
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log('Ошибка tokenCheck: ' + err);
           setLoggedIn(false);
+          setEmail('');
         })
     }
   }

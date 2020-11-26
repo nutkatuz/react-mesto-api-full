@@ -11,92 +11,92 @@ class Api {
 
   getInitialItems() {
     return fetch(`${this.baseUrl}/cards`, {
-        headers: this.headers
-      })
-      .then(res => {
-        if (res.ok) {
-          return res.json()//Написать общие функции для Api.js (запрос, обработка ошибок, и.т.д)
-        }
-        return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
-      })
+      headers: this.getHeaders(),
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json()//Написать общие функции для Api.js (запрос, обработка ошибок, и.т.д)
+      }
+      return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
+    })
   }
 
   postItem({name, link}) {
     return fetch(`${this.baseUrl}/cards`, {
-        method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify({
-          name, link
-        })
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({
+        name, link
       })
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
-      })
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
+    })
   }
 
   deleteItem(_id) {
     return fetch(`${this.baseUrl}/cards/${_id}`, {
-        method: 'DELETE',
-        headers: this.headers
-      })
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
-      })
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
+    })
   }
 
   patchUserAvatar(avatar) {
     return fetch(`${this.baseUrl}/users/me/avatar`, {
-        method: 'PATCH',
-        headers: this.headers,
-        body: JSON.stringify(avatar)
-      })
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
-      })
+      method: 'PATCH',
+      headers: this.getHeaders(),
+      body: JSON.stringify(avatar)
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
+    })
   }
 
   getUserData() {
     return fetch(`${this.baseUrl}/users/me`, {
-        headers: this.headers
-      })
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
-      })
+      headers: this.getHeaders(),
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
+    })
   }
 
   patchUserData({name, about}) {
     return fetch(`${this.baseUrl}/users/me`, {
-        method: 'PATCH',
-        headers: this.headers,
-        body: JSON.stringify({
-          name,
-          about
-        })
+      method: 'PATCH',
+      headers: this.getHeaders(),
+      body: JSON.stringify({
+        name,
+        about
       })
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
-      })
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка при обращении к серверу: ${res.status}`)
+    })
   }
 
   putLike(_id) {
     return fetch(`${this.baseUrl}/cards/likes/${_id}`, {
         method: 'PUT',
-        headers: this.headers
+        headers: this.getHeaders(),
       })
       .then(res => {
         if (res.ok) {
@@ -109,7 +109,7 @@ class Api {
   deleteLike(_id) {
     return fetch(`${this.baseUrl}/cards/likes/${_id}`, {
         method: 'DELETE',
-        headers: this.headers
+        headers: this.getHeaders(),
       })
       .then(res => {
         if (res.ok) {
@@ -137,7 +137,7 @@ class Api {
 
   getHeaders() {
     // const token = getToken();
-    const token = localStorage.getItem('jwt') // тут мы получаем токен из localStorage
+    const token = localStorage.getItem('jwt') // Ты когда сохраняешь, называешь token. А когда достаешь, jwt. Надо одинаково.
     return {
       ...this.headers,
       'Authorization': `Bearer ${token}`,

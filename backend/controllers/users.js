@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const jwtSign = require('../helpers/jwt-sign')
 
 const getCurrentUser = (req, res) => { // здесь юзер.айди
   const { user } = req.user;
@@ -44,7 +45,7 @@ const editUser = async (req, res) => {
   try {
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate({ _id: req.user._id }, { name, about });
-    res.status(200).send(user);
+    res.status(200).send(user); // patchUserData({name, about})
   } catch (err) {
     res.status(400).send({ message: `Ошибка на сервере при патче: ${err}` });
   }
@@ -68,7 +69,7 @@ const editUserAvatar = async (req, res) => {
 //В контроллере createUser почта и хеш пароля записываются в базу.
 const createUser = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) { // anna@ya.ru 111
+  if (!email || !password) { 
     return res.status(400).send({ message: 'не заполнены поля формы рег-ции' });
   }
   User
@@ -76,7 +77,7 @@ const createUser = (req, res, next) => {
   .then((user) => {
     if (user) {
       res.status(409).send({ message: 'Пользователь с таким email уже зарегистрирован'})
-      return next(new ConflictDataError(err)); // return Promise.reject
+      return next(new ConflictDataError(err));
     }
     return bcrypt.hash(password, 10);
   })
@@ -96,7 +97,7 @@ const login = (req, res) => {
     .then((user) => {
       if (!user) {
         res.status(401).send({ message: 'не заполнены поля формы логина' });
-        return next(new ConflictDataError(err)); // return Promise.reject
+        return next(new ConflictDataError(err));
       }
       // создадим токен и возвратим его обратно для доступа
       const token = jwtSign(user)
@@ -117,7 +118,6 @@ module.exports = { // контроллер возвращает информац
   editUserAvatar, // редактирование
   login,          // проверяет полученные в теле запроса почту и пароль.
 };
-
 
 // res.status(400). валидейшн эррор или каст эррор
 // res.status(401). нет токена или невалидный пароль

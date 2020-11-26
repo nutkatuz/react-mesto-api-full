@@ -44,7 +44,8 @@ const userSchema = new mongoose.Schema({
 // Описываем метод findUserByCredentials -Собственные методы моделей Mongoose для контроллера логина
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email })
+  return this.findOne({ email }).select('+password')
+  // return this.findOne({ email }) в случае аутентификации хеш пароля нужен. Чтобы это реализовать, после вызова метода модели, нужно добавить вызов метода select, передав ему строку +password:
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));

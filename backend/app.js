@@ -18,6 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // нет сторонним пакетам!
 
 app.use(cors());
-app.use('/', routes); // защита роутов в общем файле для роутов
+app.use('/', routes); // защита роутов - в общем файле для роутов
 
 app.listen(PORT, () => console.log(`App listening on port ${PORT}..`));
