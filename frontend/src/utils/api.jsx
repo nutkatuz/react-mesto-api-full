@@ -136,7 +136,8 @@ class Api {
   }
 
   getHeaders() {
-    const token = getToken(); // тут мы получаем токен из localStorage
+    // const token = getToken();
+    const token = localStorage.getItem('jwt') // тут мы получаем токен из localStorage
     return {
       ...this.headers,
       'Authorization': `Bearer ${token}`,

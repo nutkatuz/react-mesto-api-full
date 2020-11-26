@@ -1,6 +1,4 @@
-/* eslint-disable no-multi-spaces */
 const jwt = require('jsonwebtoken');
-
 const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
@@ -73,20 +71,21 @@ const createUser = (req, res, next) => {
     if (!email || !password) { // anna@ya.ru 111
     return res.status(400).send({ message: 'не заполнены поля формы' });
   }
-  // console.log(`76 ${req.body}`)
-  User.findOne({ email })
+  User
+  .findOne({ email })
   .then((user) => {
     if (user) {
-      return res.status(409).send({ message: 'Пользователь с таким email уже зарегистрирован'});
+      res.status(409).send({ message: 'Пользователь с таким email уже зарегистрирован'})
+      next(new ConflictDataError(err)); // прервать контроллер!! // return Promise.reject
     }
-    return {hash:  bcrypt.hash(password, 10), user}
+    return bcrypt.hash(password, 10);
   })
  // далее - зона безопасной регистрации  .catch(next);
-  .then((hash, user) =>
-    User.create({ email, password: hash, })
-      .then(user => res.status(201).send({ data: user}))
-      .catch(err => res.status(500).send({ message: 'Произошла ошибка сервера' })))
-    .catch(err => res.status(500).send({ message: 'Произошла ошибка сервера' }))
+  .then((hash) => User
+    .create({ email, password: hash, })
+    .then(user => res.status(201).send({ data: user }))
+  )
+  .catch(err => res.status(500).send({ message: 'Произошла ошибка сервера' }))
 };
 
 const login = (req, res) => {

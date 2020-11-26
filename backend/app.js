@@ -17,7 +17,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // нет сторонним пакетам!
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use('/', routes); // защита роутов в общем файле для роутов
 
