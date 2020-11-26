@@ -99,10 +99,7 @@ const login = (req, res) => {
         return next(new ConflictDataError(err)); // return Promise.reject
       }
       // создадим токен и возвратим его обратно для доступа
-      const token = jwt.sign(
-        { _id: user._id }, //создаёт JWT, в пейлоуде - _id с идентификатором юзера
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' },
-      );
+      const token = jwtSign(user)
       res.send({ token });
     })
     .catch((err) => {
