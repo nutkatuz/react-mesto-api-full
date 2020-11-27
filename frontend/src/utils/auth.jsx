@@ -9,7 +9,7 @@ export const register = (email, password) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({email, password})
-  })
+  }) //Регистрация создаёт пользователя с емейл и Пароль, 
   .then((res) => {
     if (res.ok) {
       console.log(`успешная регистрация, статус ${res.status}`)
@@ -30,6 +30,7 @@ export const authorize = (email, password) => {
     body: JSON.stringify({email, password})
   })
   .then((res) => {
+    console.log('в authorize в signin до иф: ' + res);
     if (res.ok) {
       return res.json();
     }

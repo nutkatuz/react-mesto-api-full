@@ -224,7 +224,7 @@ function App() {
         .catch((err) => {
           console.log('Ошибка проверки tokenCheck: ' + err);
           setLoggedIn(false);
-          setEmail('');
+          setEmail(''); //скорее всего зря....
         })
     } else {
       console.log('нет токена на tokenCheck: ' + token);

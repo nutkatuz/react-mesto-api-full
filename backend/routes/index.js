@@ -7,7 +7,7 @@ const auth = require('../middlewares/auth');
 
 router.use(authsRouter);
 // Все роуты, кроме /signin и /signup, защищены авторизацией:
-router.use('/', auth, userRouter);
+router.use('/', userRouter);
 router.use('/', auth, cardsRouter);
 router.use(notFoundRouter);
 
