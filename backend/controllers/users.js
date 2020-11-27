@@ -5,6 +5,7 @@ const User = require('../models/user');
 const jwtSign = require('../helpers/jwt-sign')
 
 const getCurrentUser = (req, res) => { // здесь юзер.айди
+  console.log( 'fffffffffffffffffff' + req)
   const { user } = req.user;
   return User.findUserByCredentials(user)
     .then(() => {

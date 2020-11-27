@@ -13,18 +13,18 @@ module.exports = (req, res, next) => {
       .status(401)
       .send({ message: 'Необходима авторизация' });
   }
-
+// в ост случаях:
   const token = authorization.replace('Bearer ', '');
-  console.log(token);
+  console.log('MYTOKENIS' + token);
   let payload;
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'admin-secret');
   } catch (err) {
     return res
       .status(401)
-      .send({ message: 'Необходима авторизация' });
+      .send({ message: 'Нет прав доступа' });
   }
   req.user = payload; // записываем пейлоуд в объект запроса
-  console.log(payload);
+  console.log('MYPAYLOADIS' + payload);
   next(); // пропускаем запрос дальше
 };

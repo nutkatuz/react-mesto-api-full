@@ -184,9 +184,9 @@ function App() {
   function handleRegister(email, password) {
     auth.register(email, password)
       .then(() => {
-    console.log(email, password)
         setIsSuccess(true);
         history.push('/sign-in');
+    console.log('Что выводит зэн?: ' + email + password)
       })
       .catch((err) => {
         if (err === 400) {
