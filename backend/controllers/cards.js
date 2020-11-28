@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
-const BadRequestError = require('../errors/ValidationError');
+const ValidationError = require('../errors/ValidationError');
 
 // const ERROR_CODE = 400;
 
@@ -67,7 +67,6 @@ const postCard = (req, res, next) => {
 //   }
 // };
 
-
 const deleteCard = (req, res, next) => {
   Card.findById(req.params._id)
     .then((card) => {
@@ -81,8 +80,20 @@ const deleteCard = (req, res, next) => {
     .catch(next);
 };
 
+const getCardById = (req, res, next) => { //пытались удал кард с ненайденным айди
+  Card.findById(req.params._id)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Нет карточки с таким id');
+      }
+      return res.send(card);
+    })
+    .catch(next);
+};
+
 module.exports = {
   getCards,
   postCard,
   deleteCard,
+  getCardById,
 };

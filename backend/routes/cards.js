@@ -4,6 +4,7 @@ const {
   getCards,
   postCard,
   deleteCard,
+  getCardById,
 } = require('../controllers/cards.js');
 
 // router.post('/posts', celebrate({
@@ -14,6 +15,7 @@ const {
 // }), createPost);
 
 cardsRouter.get('/cards', getCards);
+cardsRouter.get('/cards/:_id', getCardById)
 cardsRouter.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
@@ -25,5 +27,6 @@ cardsRouter.delete('/cards/:_id', celebrate({
     cardId: Joi.string().required().hex(),
   }),
 }), deleteCard);
+
 
 module.exports = cardsRouter;
