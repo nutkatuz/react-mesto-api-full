@@ -161,7 +161,7 @@ const login = (req, res) => {
       if (!user) {
         res.status(401).send({ message: 'не заполнены поля формы логина' });
         return next(new ConflictDataError(err));
-        // throw new ConflictDataError(err)
+        // throw new ConflictDataError('Не заполнены поля формы логина')
       }
       // создадим токен и возвратим его обратно для доступа
       const token = jwtSign(user)
