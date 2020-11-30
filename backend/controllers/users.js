@@ -8,7 +8,6 @@ const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
 
 const _getCurrentUser = (req, res) => { // здесь юзер.айди
-  // console.log( 'fffffffffffffffffff' + req)
   const { _id } = req.user;
   return User.findOne({_id})
     .then((user) => {
@@ -22,27 +21,13 @@ const _getCurrentUser = (req, res) => { // здесь юзер.айди
     });
     // .catch(next);
 };
+
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new NotFoundError('Нет пользователя с таким id'))
     .then((user) => res.send(user))
     .catch(next);
 };
-
-// const getUser = async (req, res) => {
-//   try {
-//     const user = await User.findOne({ _id: req.params.id }); // здесь парамс.айди   getUserData() {
-//     if (!user) {
-//       res.status(404).send({ message: 'Нет пользователя с таким id' });
-//     } else {
-//       res.status(200).send(user);
-//     }
-//   } catch (err) {
-//     res
-//       .status(400)
-//       .send({ message: `Ошибка на сервере при поиске пользователя: ${err}` });
-//   }
-// };
 
 const getUser = (req, res, next) => {
   User.findOne({ _id: req.user.id })
@@ -65,28 +50,6 @@ const getUsers = async (req, res) => {
   }
 };
 
-
-// const editUser = async (req, res) => {
-//   try {
-//     const { name, about } = req.body;
-//     const newuser = await User.findByIdAndUpdate(
-//       { _id: req.user._id },
-//       { name, about }
-//       );
-//     res.status(200).send(newuser); // patchUserData({name, about})
-//   } catch (err) {
-//     res.status(400).send({ message: `Ошибка на сервере при патче: ${err}` });
-//   }
-// };
-// const editUser = async (req, res, next) => {
-//   try {
-//     const { name, about } = req.body;
-//     const newUser = await User.findByIdAndUpdate({ _id: req.user._id }, { name, about } )
-//     res.send(newUser) //да что ж такое!
-//   } catch(err){
-//     next(err)
-//   }
-// }
 const editUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate({ _id: req.user._id }, { name, about } )
@@ -98,18 +61,6 @@ const editUser = (req, res, next) => {
     .catch(next);
 };
 
-// const editUserAvatar = async (req, res) => {
-//   try {
-//     const { avatar } = req.body;
-//     const newuser = await User.findByIdAndUpdate(
-//       { _id: req.user._id },
-//       { avatar },
-//     );
-//     res.status(200).send(newuser);
-//   } catch (err) {
-//     res.status(400).send({ message: `Ошибка на сервере при патче авы: ${err}` });
-//   }
-// };
 const editUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
