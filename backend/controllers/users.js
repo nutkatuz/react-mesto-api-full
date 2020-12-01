@@ -17,13 +17,6 @@ const getCurrentUser = (req, res, next) => { // здесь юзер.айди
     .catch(next);
 };
 
-// const getCurrentUser = (req, res, next) => {
-//   User.findById(req.user._id)
-//     .orFail(new NotFoundError('Нет пользователя с таким id'))
-//     .then((user) => res.send(user))
-//     .catch(next);
-// };
-
 const getUser = (req, res, next) => {
   User.findOne({ _id: req.user.id })
     .orFail(new NotFoundError('Нет пользователя с таким id'))
@@ -38,9 +31,6 @@ const getUsers = async (req, res, next) => {
     const users = await User.find({});
     res.status(200).send(users);
   } catch (err) {
-    // res
-    //   .status(400)
-    //   .send({ message: `Ошибка на сервере при поиске полей Users: ${err}` });
     next(err);
   }
 };
@@ -52,7 +42,7 @@ const editUser = (req, res, next) => {
     .catch(() => {
       throw new ValidationError({ message: 'Указаны некорректные данные' });
     })
-    .then((user) => res.send(user)) // не получается вывести нового пользователя
+    .then((user) => res.status(200).send(user))
     .catch(next);
 };
 
@@ -66,7 +56,7 @@ const editUserAvatar = (req, res, next) => {
     .catch(() => {
       throw new ValidationError({ message: 'Указаны некорректные данные' });
     })
-    .then((user) => res.send(user))
+    .then((user) => res.status(200).send(user))
     .catch(next);
 };
 
@@ -85,32 +75,15 @@ const createUser = (req, res, next) => {
       return bcrypt.hash(password, 10);
     })
     .then((hash) => User.create({ email, password: hash })
-      .then((user) => res.status(201).send(user)))
+      .then((user) => res.status(200).send(user)))
     .catch(next);
 };
 
-// const login = (req, res, next) => {
-//   const { email, password } = req.body;
-//   User.findUserByCredentials(email, password)
-//     .orFail(new ConflictDataError('Не заполнены поля формы логина'))
-//     .then((user) => {
-//       const token = jwtSign(user);
-//       res.send({ token });
-//     })
-//     .catch(next);
-// };
-
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    throw new ValidationError('Не заполнены поля формы');
-  }
-  return User.findUserByCredentials(email, password) // сравним запрос с БД
-    .then((user) => {
-      if (!user) {
-        throw new ValidationError('Неправильные почта и/или пароль');
-      }
-      const token = jwtSign(user); // создадим токен и возвратим его обратно для доступа
+  User.findUserByCredentials(email, password)
+    .then((user) => { // проверка в модели
+      const token = jwtSign(user);
       res.send({ token });
     })
     .catch(next);
